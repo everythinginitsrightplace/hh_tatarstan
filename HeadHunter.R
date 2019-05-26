@@ -12,17 +12,17 @@ library(rio)
 system.time(d <- download.file( url = "https://github.com/Dmitryi/statistic/archive/master.zip", destfile = "statistic.zip"))
 file.info("statistic.zip")
 unzip(zipfile = "statistic.zip")
-setwd("/Users/aidarzinnatullin/statistic-master")
+setwd("/Users/statistic-master")
 list.files()
 
 
 # Удалим не нужные файлы и папки
-files.to.delete <- dir("/Users/aidarzinnatullin/statistic-master", pattern = ".*", recursive=F, full.names=T)
+files.to.delete <- dir("/Users/statistic-master", pattern = ".*", recursive=F, full.names=T)
 file.remove(files.to.delete)
 unlink(c("css", "fonts", "img", "js"), recursive = T)
 
 # Переходим в папку с данными
-setwd("/Users/aidarzinnatullin/statistic-master/data")
+setwd("/Users/statistic-master/data")
 list.files()
 
 
@@ -79,81 +79,13 @@ rownames(data_vac_tatarstan) <- c("banki","buhgalter","bulding","consult","cultu
 
 
 
-# Data frame (таблица) из суммы вакансий/резюме по каждому региону и по каждой профессиональной деятельности в отдельности 
-library(dplyr)
-banki1 <- banki %>% summarise_all(list(sum)) 
-rownames(banki1) <- "banki"
-buhgalter1 <- buhgalter %>% summarise_all(list(sum)) 
-rownames(buhgalter1) <- "buhgalter"
-bulding1 <- bulding %>% summarise_all(funs(sum)) 
-rownames(bulding1) <- "bulding"
-consult1 <- consult %>% summarise_all(funs(sum)) 
-rownames(consult1) <- "consult"
-culture1 <- culture %>% summarise_all(funs(sum))
-rownames(culture1) <- "culture"
-admin1 <- admin %>% summarise_all(funs(sum))
-rownames(admin1) <- "admin"
-gos1 <- gos %>% summarise_all(funs(sum))
-rownames(gos1) <- "gos"
-house1 <- house %>% summarise_all(funs(sum))
-rownames(house1) <- "house"
-hr1 <- hr %>% summarise_all(funs(sum))
-rownames(hr1) <- "hr"
-instal1 <- instal %>% summarise_all(funs(sum))
-rownames(instal1) <- "instal"
-it1 <- it %>% summarise_all(funs(sum))
-rownames(it1) <- "it"
-logist1 <- logist %>% summarise_all(funs(sum))
-rownames(logist1) <- "logist"
-market1 <- market %>% summarise_all(funs(sum))
-rownames(market1) <- "market"
-medicina1 <- medicina %>% summarise_all(funs(sum))
-rownames(medicina1) <- "medicina"
-nauka1 <- nauka %>% summarise_all(funs(sum))
-rownames(nauka1) <- "nauka"
-proizvotstvo1 <- proizvotstvo %>% summarise_all(funs(sum))
-rownames(proizvotstvo1) <- "proizvotstvo"
-rab1 <- rab %>% summarise_all(funs(sum))
-rownames(rab1) <- "rab"
-sales1 <- sales %>% summarise_all(funs(sum))
-rownames(sales1) <- "sales"
-secure1 <- secure %>% summarise_all(funs(sum))
-rownames(secure1) <- "secure"
-sport1 <- sport %>% summarise_all(funs(sum))
-rownames(sport1) <- "sport"
-strahovanie1 <- strahovanie %>% summarise_all(funs(sum))
-rownames(strahovanie1) <- "strahovanie"
-study1 <- study %>% summarise_all(funs(sum))
-rownames(study1) <- "study"
-tek1 <- tek %>% summarise_all(funs(sum))
-rownames(tek1) <- "tek"
-top1 <- top %>% summarise_all(funs(sum))
-rownames(top1) <- "top"
-turizm1 <- turizm %>% summarise_all(funs(sum))
-rownames(turizm1) <- "turizm"
-urist1 <- urist %>% summarise_all(funs(sum))
-rownames(urist1) <- "urist"
-auto1 <- auto %>% summarise_all(funs(sum))
-rownames(auto1) <- "auto"
-zakupki1 <- zakupki %>% summarise_all(funs(sum))
-rownames(zakupki1) <- "zakupki"
 
 
-data_prof <- rbind(banki1, buhgalter1, bulding1, consult1, culture1, admin1, gos1, house1, hr1, instal1, it1, logist1, market1, medicina1, nauka1, proizvotstvo1, rab1,
-                   sales1, secure1, sport1, strahovanie1, study1, tek1, top1, turizm1, urist1, auto1, zakupki1)
+# Данные по уровню заработной платы в вакансиях
 
-
-
-
-# Для каждого регина отдельно, данные по уровню заработной платы в вакансиях
-#moscow_v <- read.csv("datazpvachhmoscow.csv", header = T, sep = ",")[,2:16]
-#spb_v <- read.csv("datazpvachhspb.csv", header = T, sep = ",")[,2:16]
-#novosib_v <- read.csv("datazpvachhnovosib.csv", header = T, sep = ",")[,2:16]
-# kaluga_v <- read.csv("datazpvachhkaluzobl.csv", header = T, sep = ",")[,2:16]
 tatarstan_v <- read.csv("datazpvachhtatarstan.csv", header = T, sep = ",")[,2:16]
-# tomsk_v <- read.csv("datazpvachhtomskobl.csv", header = T, sep = ",")[,2:16]
 
-# Расчитаем разницу между цифрами, построчно, и получим истинные данные о количестве вакансий (аналогично для spb_v, novosib_v, kaluga_v, tatarstan_v, tomsk_v)
+# Расчитаем разницу между цифрами, построчно, и получим истинные данные о количестве вакансий
 dif <- diff(t(tatarstan_v))
 от20000 <- as.integer(gsub("-", "", dif[1,]))
 от30000 <- as.integer(gsub("-", "", dif[2,]))
@@ -173,59 +105,8 @@ dif <- diff(t(tatarstan_v))
 
 tatarstan_v <- data.frame(от20000, от30000, от40000, от50000, от60000, от70000, от80000, от90000, от100000, от110000, от120000, от130000, от140000, от150000)
 
-# Сумма чисел по всем регионам в отдельности по уровню заработной платы в вакансиях
-data_vac_zp <- (moscow_v + spb_v + novosib_v + kaluga_v + tatarstan_v + tomsk_v)
-
-# Список (матрица) для каждого уровня заработной платы отдельно, по всем регионам, количество вакансий
-data_vac_20000 <- rbind(moscow_v$от20000, spb_v$от20000, novosib_v$от20000, kaluga_v$от20000, tatarstan_v$от20000, tomsk_v$от20000)
-rownames(data_vac_20000) <- c("moscow","spb","novosib","kaluga","tatarstan","tomsk")
-data_vac_30000 <- rbind(moscow_v$от30000, spb_v$от30000, novosib_v$от30000, kaluga_v$от30000, tatarstan_v$от30000, tomsk_v$от30000)
-rownames(data_vac_30000) <- c("moscow","spb","novosib","kaluga","tatarstan","tomsk")
-data_vac_40000 <- rbind(moscow_v$от40000, spb_v$от40000, novosib_v$от40000, kaluga_v$от40000, tatarstan_v$от40000, tomsk_v$от40000)
-rownames(data_vac_40000) <- c("moscow","spb","novosib","kaluga","tatarstan","tomsk")
-
-# Для каждого регина отдельно, данные по уровню заработной платы в резюме
-moscow_r <- read.csv("datazpreshhmoscow.csv", header = T, sep = ",")[203:627,2:17]
-spb_r <- read.csv("datazpreshhspb.csv", header = T, sep = ",")[203:627,2:17]
-novosib_r <- read.csv("datazpreshhnovosib.csv", header = T, sep = ",")[203:627,2:17]
-kaluga_r <- read.csv("datazpreshhkaluzobl.csv", header = T, sep = ",")[,2:17]
+# Данные по уровню заработной платы в резюме
 tatarstan_r <- read.csv("datazpreshhtatarstan.csv", header = T, sep = ",")[,2:17]
-tomsk_r <- read.csv("datazpreshhtomskobl.csv", header = T, sep = ",")[,2:17]
-
-# Сумма чисел по всем регионам в отдельности по уровню заработной платы в резюме
-data_res_zp <- (moscow_r + spb_r + novosib_r + kaluga_r + tatarstan_r + tomsk_r)
-
-# Список (матрица) для каждого уровня заработной платы отдельно, по всем регионам, количество резюме
-data_res_9999 <- rbind(moscow_r$до.9999.руб, spb_r$до.9999.руб, novosib_r$до.9999.руб, kaluga_r$до.9999.руб, tatarstan_r$до.9999.руб, tomsk_r$до.9999.руб)
-rownames(data_res_9999) <- c("moscow","spb","novosib","kaluga","tatarstan","tomsk")
-data_res_10000 <- rbind(moscow_r$X10000.19999.руб, spb_r$X10000.19999.руб, novosib_r$X10000.19999.руб, kaluga_r$X10000.19999.руб, tatarstan_r$X10000.19999.руб, tomsk_r$X10000.19999.руб)
-rownames(data_res_10000) <- c("moscow","spb","novosib","kaluga","tatarstan","tomsk")
-data_res_20000 <- rbind(moscow_r$X20000.29999.руб, spb_r$X20000.29999.руб, novosib_r$X20000.29999.руб, kaluga_r$X20000.29999.руб, tatarstan_r$X20000.29999.руб, tomsk_r$X20000.29999.руб)
-rownames(data_res_20000) <- c("moscow","spb","novosib","kaluga","tatarstan","tomsk")
-
-
-
-
-
-library(PerformanceAnalytics)
-chart.Boxplot(t(data_vac_res), main = "Совокупность данных по всем профессиональным областям", xlab = "Кол-во резюме", mean.symbol = 16)
-chart.Boxplot(consult, main = "Проф. область - Консультирование, консалтинг и стратегическое развитие", xlab = "Кол-во резюме", mean.symbol = 16)
-chart.Boxplot(tek, main = "Проф. область - Добыча сырья, ТЭК", xlab = "Кол-во резюме", mean.symbol = 16)
-chart.Boxplot(it, main = "Проф. область - ИТ", xlab = "Кол-во резюме", mean.symbol = 16)
-
-#### Experiments
-chart.Boxplot(t(tatarstan_v), main = "Совокупность данных по всем профессиональным областям в РТ", xlab = "Кол-во вакансий", mean.symbol = 16)
-chart.Boxplot(t(tatarstan_r), main = "Совокупность данных по всем профессиональным областям в РТ", xlab = "Кол-во резюме", mean.symbol = 16)
-
-
-
-par(mfrow=c(3, 4))
-colnames <- dimnames(data_vac_res)[[2]]
-for (i in 1:12) {
-  hist(data_vac_res[,i], main=colnames[i], probability=TRUE, col="gray", border="white")
-  d <- density(data_vac_res[,i])
-  lines(d, col="red")
-}
 
 
 tatar_vacancies <- cbind(banki$Вакансии.Татарстан, buhgalter$Вакансии.Татарстан, admin$Вакансии.Татарстан, 
@@ -251,7 +132,7 @@ colnames(tatar_vacancies) <- c("Банки","Бухгалтерия", "Адми�
                                "Туризм", "Юристы", "Закупки") 
 
 
-####### Необходимо боксплот сделать по всем профессиям в РТ, надо просто по РТ собрать все данные в одну таблицу и сделать вот это 
+####### Боксплот по всем профессиям в РТ
 chart.Boxplot(tatar_vacancies, main = "Кого чаще всего ищут в Татарстане?", xlab = "Кол-во вакансий", mean.symbol = 16)
 
 
